@@ -1,15 +1,14 @@
 import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
-// import { ShoesValidation } from './validation.projects';
 import { projectControllers } from './controller.projects';
-// import auth from '../../middlewares/auth';
-// import { USER_ROLE } from '../user/constant.user';
+import { USER_ROLE } from '../auth/const.auth';
+import auth from '../../middlewares/auth';
 
 const router = express.Router();
 
 router.post(
-  '/create-shoes',
-  // auth(USER_ROLE.seller, USER_ROLE.superAdmin),
+  '/create-project',
+  auth(USER_ROLE.user, USER_ROLE.superAdmin),
   // validateRequest(ShoesValidation.CreateShoesValidationSchema),
   projectControllers.createProject,
 );
@@ -22,7 +21,7 @@ router.get(
 );
 // get single
 router.get(
-  '/:shoeId',
+  '/:projectId',
   // auth(USER_ROLE.buyer, USER_ROLE.seller, USER_ROLE.superAdmin),
   projectControllers.getSingleProject,
 );

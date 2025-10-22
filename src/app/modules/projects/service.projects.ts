@@ -1,135 +1,124 @@
+
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import AppError from '../../errors/AppErrors'; 
+import httpStatus from 'http-status';
 import { TProject } from './interface.projects';
 import { Projects } from './model.projects';
-import AppError from '../../errors/AppErrors';
-import httpStatus from 'http-status';
 
-// create shoes
+// 1. Create a new project
 const createProject = async (projectData: TProject) => {
   const result = await Projects.create(projectData);
   return result;
 };
 
-// get all shoes
+// 2. Get all projects with filtering, sorting, and pagination
 const getAllProjects = async (payload: Record<string, unknown>) => {
   try {
+   
     const {
       page = 1,
-      limit = 15,
-      sortBy = 'startDate',
-      sortOrder = 'asc',
-      minPrice,
-      maxPrice,
-      releasedAt,
-      productName,
-      brand,
-      model,
-      size,
+      limit = 10,
+      sortBy = 'createdAt',  
+      sortOrder = 'desc',  
+      title,
+      technology, 
       category,
-      color,
-      gender,
-      rawMaterial,
+      status,
+      createdAfter,  
     } = payload;
 
-    //  filter object based on query parameters
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
     const filter: any = {};
 
-    if (minPrice || maxPrice) {
-      filter.price = {};
-      if (minPrice) filter.price.$gte = parseFloat(String(minPrice));
-      if (maxPrice) filter.price.$lte = parseFloat(String(maxPrice));
+    if (title) {
+      filter.title = { $regex: new RegExp(title as string, 'i') };
     }
-
-    if (releasedAt) {
-      const releaseDate = new Date(releasedAt as string);
-
-      // Check if the parsed date is valid
+    if (category) {
+      filter.category = { $regex: new RegExp(category as string, 'i') };
+    }
+    if (status) {
+      filter.status = { $regex: new RegExp(status as string, 'i') };
+    }
+    if (technology) {
+      filter.technologies = { $regex: new RegExp(technology as string, 'i') };
+    }
+    if (createdAfter) {
+      const releaseDate = new Date(createdAfter as string);
       if (!isNaN(releaseDate.getTime())) {
-        // Filter documents where createdAt is greater than or equal to releaseDate
         filter.createdAt = { $gte: releaseDate };
       }
     }
-
-    if (productName)
-      filter.productName = { $regex: new RegExp(productName as string, 'i') };
-    if (brand) filter.brand = { $regex: new RegExp(brand as string, 'i') };
-    if (model) filter.model = { $regex: new RegExp(model as string, 'i') };
-    if (size) filter.size = { $regex: new RegExp(size as string, 'i') };
-    if (gender) filter.gender = { $regex: new RegExp(gender as string, 'i') };
-    if (color) filter.color = { $regex: new RegExp(color as string, 'i') };
-    if (rawMaterial)
-      filter.rawMaterial = { $regex: new RegExp(rawMaterial as string, 'i') };
-    if (category)
-      filter.category = { $regex: new RegExp(category as string, 'i') };
-
-    // sort order && sort by
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    
     const sort: Record<string, any> = {};
     sort[sortBy as string] = sortOrder === 'asc' ? 1 : -1;
 
-    // calculate skip value for pagination
-    const skip = (parseInt(String(page)) - 1) * parseInt(String(limit));
+    const skip = (Number(page) - 1) * Number(limit);
 
     const result = await Projects.find(filter)
-      // .populate('createdBy', '-password -createdAt -updatedAt')
       .sort(sort)
       .skip(skip)
-      .limit(parseInt(String(limit)));
+      .limit(Number(limit));
 
-    return result;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const total = await Projects.countDocuments(filter);
+
+    return {
+      // meta: {
+      //   page: Number(page),
+      //   limit: Number(limit),
+      //   total,
+      // },
+      data: result,
+    };
   } catch (err: any) {
-    throw new Error(err);
+    throw new Error(err.message);
   }
 };
 
-// getSingle shoe
+// 3. Get a single project by ID
 const getSingleProject = async (id: string) => {
-  const singleShoe = await Projects.findById({ _id: id });
+  const result = await Projects.findById(id);
 
-  return singleShoe;
-};
-
-// delete shoes
-const deleteProject = async (ids: string[]) => {
-  // get reviews
-  const deleteProject= await Projects.deleteMany({ _id: { $in: ids } });
-  return deleteProject;
-};
-
-// update
-const updateProject = async (id: string, updatedData: Partial<TProject>) => {
-  // console.log(id);
-
-  // Basic update primitive fields
-  const updatedBasicShoeInfo = await Projects.findOneAndUpdate(
-    { _id: id },
-
-    { $set: updatedData },
-    { upsert: true, new: true, runValidators: true },
-  );
-
-  if (!updatedBasicShoeInfo) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      'Failed to update basic product',
-      'shoe update',
-    );
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Project not found with this ID');
   }
+  
+  return result;
+};
 
-  const result = await Projects.findById({ _id: id });
+// 4. Delete one or more projects by ID(s)
+const deleteProjects = async (ids: string[]) => {
+  const result = await Projects.deleteMany({ _id: { $in: ids } });
+
+  if (result.deletedCount === 0) {
+     throw new AppError(httpStatus.NOT_FOUND, 'No projects found to delete');
+  }
 
   return result;
 };
 
- 
+// 5. Update a project
+const updateProject = async (id: string, updatedData: Partial<TProject>) => {
+  const result = await Projects.findByIdAndUpdate(
+    id,
+    { $set: updatedData },
+    { new: true, runValidators: true } 
+  );
+
+  if (!result) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'Failed to update project. Project not found.',
+    );
+  }
+
+  return result;
+};
 
 export const ProjectServices = {
   createProject,
   getAllProjects,
-  updateProject,
-  deleteProject,
   getSingleProject,
-  // verifyProduct,
+  updateProject,
+  deleteProjects,
 };

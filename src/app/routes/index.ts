@@ -13,10 +13,7 @@ const moduleRoute = [
     path: '/projects',
     route: projectRoutes,
   },
-  // {
-  //   path: '/sales',
-  //   route: sellsRoute,
-  // },
+ 
   // {
   //   path: '/shoePolish',
   //   route: polishRoute,

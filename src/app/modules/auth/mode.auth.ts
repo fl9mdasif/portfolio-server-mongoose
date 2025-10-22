@@ -1,7 +1,7 @@
-import { Schema, model } from 'mongoose';
-import { TUser, UserModel } from './interface.user';
+import { Schema, model } from 'mongoose'; 
 import bcrypt from 'bcrypt';
 import config from '../../config';
+import { TUser, UserModel } from './interface.auth';
 
 const userSchema = new Schema<TUser, UserModel>(
   {
@@ -25,7 +25,7 @@ const userSchema = new Schema<TUser, UserModel>(
     },
     role: {
       type: String,
-      enum: ['seller', 'buyer', 'superAdmin'],
+      enum: ['user', 'superAdmin'],
       required: true,
     },
 
@@ -34,7 +34,7 @@ const userSchema = new Schema<TUser, UserModel>(
   { timestamps: true },
 );
 
-// hash the password
+ 
 // hash the password
 userSchema.pre('save', async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -57,16 +57,6 @@ userSchema.statics.isPasswordMatched = async function (
   return await bcrypt.compare(plainTextPassword, hashedPassword);
 };
 
-// Exclude password field when converting to JSON
-// userSchema.set('toJSON', {
-//   transform: function (doc, ret) {
-//     delete ret.password;
-//     delete ret.passwordChangedAt;
-//     delete ret.__v;
-//   },
-// });
-
-// for auth
 // find user exists
 userSchema.statics.isUserExists = async function (name: string) {
   return await User.findOne({ username: name });

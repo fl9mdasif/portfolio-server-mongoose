@@ -1,17 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
-import { User } from '../user/mode.user';
-import { TLoginUser } from './interface.auth';
+import { User } from './mode.auth';
+import { TLoginUser, TUser } from './interface.auth';
 import AppError from '../../errors/AppErrors';
 import config from '../../config';
-import { createToken, verifyToken } from './utils.auth';
 import bcrypt from 'bcrypt';
+import { createToken, verifyToken } from './utils.auth';
 import { JwtPayload } from 'jsonwebtoken';
+
+const registerUser = async (payload: TUser) => {
+  // create
+  const register = await User.create(payload);
+  return register;
+};
 
 const loginUser = async (payload: TLoginUser) => {
   //
+  console.log(payload)
   // 1. checking if the user is exist
-  const user = await User.isUserExists(payload.username);
+  const user = await User.isUserExists(payload.email);
   // console.log(user);
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, '', `This user is not found !'`);
@@ -36,7 +43,7 @@ const loginUser = async (payload: TLoginUser) => {
 
   // create token
   const accessToken = createToken(
-    jwtPayload,
+    jwtPayload ,
     config.jwt_access_secret as string,
     config.jwt_access_expires_in as string,
   );
@@ -151,6 +158,7 @@ const refreshToken = async (token: string) => {
 
 export const authServices = {
   loginUser,
+  registerUser,
   changePassword,
   refreshToken,
 };

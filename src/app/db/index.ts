@@ -1,7 +1,7 @@
 
 import config from '../config';
-import { USER_ROLE } from '../modules/user/constant.user';
-import { User } from '../modules/user/mode.user';
+import { USER_ROLE } from '../modules/auth/const.auth';
+import { User } from '../modules/auth/mode.auth';
 
 const superUser = {
   username: 'superAdmin',

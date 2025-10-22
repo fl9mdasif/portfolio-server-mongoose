@@ -1,4 +1,4 @@
 export const USER_ROLE = {
- dev_asif: 'dev_asif',
+  user: 'user',
   superAdmin: 'superAdmin',
 } as const;

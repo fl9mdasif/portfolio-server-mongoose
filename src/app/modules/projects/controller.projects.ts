@@ -13,15 +13,16 @@ const createProject: RequestHandler = async (req, res) => {
   response.createSendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Product created Successfully',
+    message: 'Project created Successfully',
     data: result,
   });
 };
 
 // get all course
 const getAllProjects = catchAsync(async (req, res) => {
-  const result = await ProjectServices.getAllProjects(req.query);
 
+  const result = await ProjectServices.getAllProjects(req.query);
+// console.log('result',result)
   // Get the total number of documents
   let total = 0;
 
@@ -33,7 +34,7 @@ const getAllProjects = catchAsync(async (req, res) => {
     const res = await Projects.find();
     total = res.length;
   } else {
-    total = result.length;
+    total = result.data.length;
   }
 
   response.getSendResponse(res, {
@@ -45,52 +46,52 @@ const getAllProjects = catchAsync(async (req, res) => {
       total,
       // total: 0,
     },
-    message: 'Shoes retrieved successfully',
+    message: 'Projects retrieved successfully',
     data: result,
   });
 });
-// delete shoe
-const deleteProject = catchAsync(async (req, res) => {
-  const shoeIds = req.body as string[];
-  // console.log({ courseId });
 
-  const resp = await ProjectServices.deleteProject(shoeIds);
+// delete project
+const deleteProject = catchAsync(async (req, res) => {
+  const projectId = req.body as string[];
+
+  const resp = await ProjectServices.deleteProjects(projectId);
 
   response.createSendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Shoes deleted successfully',
+    message: 'Project deleted successfully',
     data: resp,
   });
 });
 
 // Get singleShoe
 const getSingleProject = catchAsync(async (req, res) => {
-  const { shoeId } = req.params;
+  const { projectId } = req.params;
 
-  const result = await ProjectServices.getSingleProject(shoeId);
+  const result = await ProjectServices.getSingleProject(projectId);
 
   response.createSendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Shoe retrieved successfully',
+    message: 'Project retrieved successfully',
     data: result,
   });
 });
 
 // update
 const updateProject = catchAsync(async (req, res) => {
-  const { shoeId } = req.params;
-  // console.log(shoeId);
+  const { projectId } = req.params;
   const updatedData = req.body;
 
-  const result = await ProjectServices.updateProject(shoeId, updatedData);
-  // console.log('res', result);
+  // console.log('update',updatedData)
+
+  const result = await ProjectServices.updateProject(projectId, updatedData);
 
   response.createSendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Product updated successfully',
+    message: 'Project updated successfully',
     data: result,
   });
 });
