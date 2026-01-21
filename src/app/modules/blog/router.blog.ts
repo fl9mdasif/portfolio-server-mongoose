@@ -7,7 +7,7 @@ import { blogControllers } from './controller.blog';
 const router = express.Router();
 
 router.post(
-  '/create-project',
+  '/create-blog',
   auth(USER_ROLE.user, USER_ROLE.superAdmin),
   // validateRequest(ShoesValidation.CreateShoesValidationSchema),
   blogControllers.createBlog,
@@ -21,19 +21,19 @@ router.get(
 );
 // get single
 router.get(
-  '/:projectId',
+  '/:blogId',
   // auth(USER_ROLE.buyer, USER_ROLE.seller, USER_ROLE.superAdmin),
   blogControllers.getSingleBlog,
 );
 // delete
 router.delete(
-  '/:projectId',
+  '/:blogId',
   // auth(USER_ROLE.superAdmin),
   blogControllers.deleteBlogs,
 );
 
 router.put(
-  '/:projectId',
+  '/:blogId',
   // auth(USER_ROLE.seller, USER_ROLE.superAdmin),
   // validateRequest(ShoesValidation.UpdateShoesValidationSchema),
   blogControllers.updateBlog,

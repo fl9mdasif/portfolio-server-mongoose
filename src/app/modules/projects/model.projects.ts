@@ -5,7 +5,7 @@ const projectSchema = new Schema({
   description: { type: String, required: true },
   technologies: [{ type: String, required: true }],
   category: { type: String, required: true },
-  image: { type: String, required: true }, // Main image URL
+  image: { type: String}, // Main image URL
   gallery: [{ type: String }],
   liveUrl: { type: String },
   githubClient: { type: String },

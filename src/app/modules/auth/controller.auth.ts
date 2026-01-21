@@ -28,7 +28,7 @@ const loginUser = catchAsync(async (req, res) => {
     message: 'User login successfully!',
     data: {
       user: data.jwtPayload,
-      token: accessToken,
+      accessToken: accessToken,
     },
   });
 });

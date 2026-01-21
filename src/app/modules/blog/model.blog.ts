@@ -21,7 +21,7 @@ const blogSchema = new Schema<TBlog>(
       enum: ['DRAFT', 'PUBLISHED'],
       default: 'DRAFT',
     },
-    author: {
+   author: {
       type: Schema.Types.ObjectId,
       ref: 'User', // Assumes your User model is named 'User'
       required: true,
@@ -32,7 +32,7 @@ const blogSchema = new Schema<TBlog>(
     },
     publishedAt: {
       type: Date,
-      default: null,
+      // default: null,
     },
   },
   {

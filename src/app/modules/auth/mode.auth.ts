@@ -58,8 +58,8 @@ userSchema.statics.isPasswordMatched = async function (
 };
 
 // find user exists
-userSchema.statics.isUserExists = async function (name: string) {
-  return await User.findOne({ username: name });
+userSchema.statics.isUserExists = async function (email: string) {
+  return await User.findOne({ email: email });
 };
 // jwt password time checking
 userSchema.statics.isJWTIssuedBeforePasswordChanged = function (

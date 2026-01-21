@@ -2,13 +2,14 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync'; 
 import { response } from '../../utils/sendResponse';
 import { RequestHandler } from 'express';
-import { BlogServices } from './service..blog';
+import { BlogServices } from './service.blog';
 
 // create blog
-// This one is not wrapped in catchAsync, following your template
 const createBlog: RequestHandler = async (req, res) => {
+
   // Assuming authMiddleware adds user to req.user
-  const authorId = req.user.id; 
+  const authorId = req.user._id; 
+
   const result = await BlogServices.createBlog(authorId, req.body);
 
   response.createSendResponse(res, {
@@ -26,17 +27,17 @@ const getAllBlogs = catchAsync(async (req, res) => {
   response.getSendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    meta: result.meta, // Using meta from the service
+    meta: result.meta,  
     message: 'Blogs retrieved successfully',
-    data: result.data, // Using data from the service
+    data: result.data,  
   });
 });
 
 // delete blogs
 const deleteBlogs = catchAsync(async (req, res) => {
-  const blogIds = req.body as string[];
+  const { blogId } = req.params;
 
-  const resp = await BlogServices.deleteBlogs(blogIds);
+  const resp = await BlogServices.deleteBlogs(blogId);
 
   response.createSendResponse(res, {
     statusCode: httpStatus.OK,

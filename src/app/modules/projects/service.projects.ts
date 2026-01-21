@@ -63,11 +63,11 @@ const getAllProjects = async (payload: Record<string, unknown>) => {
     const total = await Projects.countDocuments(filter);
 
     return {
-      // meta: {
-      //   page: Number(page),
-      //   limit: Number(limit),
-      //   total,
-      // },
+      meta: {
+        page: Number(page),
+        limit: Number(limit),
+        total,
+      },
       data: result,
     };
   } catch (err: any) {
@@ -87,8 +87,8 @@ const getSingleProject = async (id: string) => {
 };
 
 // 4. Delete one or more projects by ID(s)
-const deleteProjects = async (ids: string[]) => {
-  const result = await Projects.deleteMany({ _id: { $in: ids } });
+const deleteProjects = async (id: string) => {
+  const result = await Projects.deleteOne({ _id: id });
 
   if (result.deletedCount === 0) {
      throw new AppError(httpStatus.NOT_FOUND, 'No projects found to delete');

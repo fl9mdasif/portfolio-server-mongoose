@@ -6,7 +6,7 @@ export interface TProject  {
   description: string;
   technologies: string[];
   category: string;
-  image: string; // Main image URL
+  image?: string; // Main image URL
   gallery?: string[];
   liveUrl?: string;
   githubClient?: string;

@@ -22,30 +22,12 @@ const createProject: RequestHandler = async (req, res) => {
 const getAllProjects = catchAsync(async (req, res) => {
 
   const result = await ProjectServices.getAllProjects(req.query);
-// console.log('result',result)
-  // Get the total number of documents
-  let total = 0;
 
-  const page = req.query.page;
-  const limit = req.query.limit;
-
-  // show total if limit query not used
-  if (!req.query) {
-    const res = await Projects.find();
-    total = res.length;
-  } else {
-    total = result.data.length;
-  }
 
   response.getSendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    meta: {
-      page: Number(page ? page : 1),
-      limit: Number(limit ? limit : 20),
-      total,
-      // total: 0,
-    },
+    
     message: 'Projects retrieved successfully',
     data: result,
   });
@@ -53,7 +35,7 @@ const getAllProjects = catchAsync(async (req, res) => {
 
 // delete project
 const deleteProject = catchAsync(async (req, res) => {
-  const projectId = req.body as string[];
+  const { projectId } = req.params;
 
   const resp = await ProjectServices.deleteProjects(projectId);
 

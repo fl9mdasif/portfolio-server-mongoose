@@ -17,6 +17,56 @@ const createBlog = async (authorId: string, blogData: Omit<TBlog, 'author'>) => 
 };
 
 // 2. Get all blogs with filtering, sorting, and pagination
+// const getAllBlogs = async (payload: Record<string, unknown>) => {
+//   try {
+//     const {
+//       page = 1,
+//       limit = 10,
+//       sortBy = 'createdAt',
+//       sortOrder = 'desc',
+//       title,
+//       status,
+//       // You can also add filtering by author ID if needed
+//     } = payload;
+
+//     const filter: any = {};
+
+//     if (title) {
+//       filter.title = { $regex: new RegExp(title as string, 'i') };
+//     }
+//     // Only show PUBLISHED blogs to the public, or all if a status is specified
+//     if (status) {
+//       filter.status = status as string;
+//     } else {
+//       filter.status = 'PUBLISHED'; // Default to public blogs
+//     }
+
+//     const sort: Record<string, any> = {};
+//     sort[sortBy as string] = sortOrder === 'asc' ? 1 : -1;
+
+//     const skip = (Number(page) - 1) * Number(limit);
+
+//     const result = await Blog.find(filter)
+//       .populate('author', 'username email') // Show author's name and email
+//       .sort(sort)
+//       .skip(skip)
+//       .limit(Number(limit));
+
+//     const total = await Blog.countDocuments(filter);
+
+//     return {
+//       meta: {
+//         page: Number(page),
+//         limit: Number(limit),
+//         total,
+//       },
+//       data: result,
+//     };
+//   } catch (err: any) {
+//     throw new Error(err.message);
+//   }
+// };
+// ২. সব ব্লগ নিয়ে আসা (FIXED)
 const getAllBlogs = async (payload: Record<string, unknown>) => {
   try {
     const {
@@ -26,19 +76,16 @@ const getAllBlogs = async (payload: Record<string, unknown>) => {
       sortOrder = 'desc',
       title,
       status,
-      // You can also add filtering by author ID if needed
     } = payload;
 
     const filter: any = {};
 
+    // টাইটেল দিয়ে সার্চ
     if (title) {
       filter.title = { $regex: new RegExp(title as string, 'i') };
     }
-    // Only show PUBLISHED blogs to the public, or all if a status is specified
     if (status) {
       filter.status = status as string;
-    } else {
-      filter.status = 'PUBLISHED'; // Default to public blogs
     }
 
     const sort: Record<string, any> = {};
@@ -47,7 +94,7 @@ const getAllBlogs = async (payload: Record<string, unknown>) => {
     const skip = (Number(page) - 1) * Number(limit);
 
     const result = await Blog.find(filter)
-      .populate('author', 'name email') // Show author's name and email
+      .populate('author', 'name email') // আপনার User মডেলে 'name' আছে, 'username' নয়
       .sort(sort)
       .skip(skip)
       .limit(Number(limit));
@@ -79,8 +126,8 @@ const getSingleBlog = async (id: string) => {
 };
 
 // 4. Delete one or more blogs by ID(s)
-const deleteBlogs = async (ids: string[]) => {
-  const result = await Blog.deleteMany({ _id: { $in: ids } });
+const deleteBlogs = async (id: string) => {
+  const result = await Blog.deleteOne({ _id: id } );
 
   if (result.deletedCount === 0) {
     throw new AppError(httpStatus.NOT_FOUND, 'No blogs found to delete');
@@ -103,7 +150,7 @@ const updateBlog = async (id: string, updatedData: Partial<TBlog>) => {
     id,
     { $set: updatedData },
     { new: true, runValidators: true },
-  ).populate('author', 'name email');
+  ).populate('author', 'username email');
 
   if (!result) {
     throw new AppError(
