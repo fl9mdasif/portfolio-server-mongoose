@@ -15,58 +15,7 @@ const createBlog = async (authorId: string, blogData: Omit<TBlog, 'author'>) => 
   const result = await Blog.create(fullBlogData);
   return result;
 };
-
-// 2. Get all blogs with filtering, sorting, and pagination
-// const getAllBlogs = async (payload: Record<string, unknown>) => {
-//   try {
-//     const {
-//       page = 1,
-//       limit = 10,
-//       sortBy = 'createdAt',
-//       sortOrder = 'desc',
-//       title,
-//       status,
-//       // You can also add filtering by author ID if needed
-//     } = payload;
-
-//     const filter: any = {};
-
-//     if (title) {
-//       filter.title = { $regex: new RegExp(title as string, 'i') };
-//     }
-//     // Only show PUBLISHED blogs to the public, or all if a status is specified
-//     if (status) {
-//       filter.status = status as string;
-//     } else {
-//       filter.status = 'PUBLISHED'; // Default to public blogs
-//     }
-
-//     const sort: Record<string, any> = {};
-//     sort[sortBy as string] = sortOrder === 'asc' ? 1 : -1;
-
-//     const skip = (Number(page) - 1) * Number(limit);
-
-//     const result = await Blog.find(filter)
-//       .populate('author', 'username email') // Show author's name and email
-//       .sort(sort)
-//       .skip(skip)
-//       .limit(Number(limit));
-
-//     const total = await Blog.countDocuments(filter);
-
-//     return {
-//       meta: {
-//         page: Number(page),
-//         limit: Number(limit),
-//         total,
-//       },
-//       data: result,
-//     };
-//   } catch (err: any) {
-//     throw new Error(err.message);
-//   }
-// };
-// ২. সব ব্লগ নিয়ে আসা (FIXED)
+ 
 const getAllBlogs = async (payload: Record<string, unknown>) => {
   try {
     const {
@@ -101,6 +50,7 @@ const getAllBlogs = async (payload: Record<string, unknown>) => {
 
     const total = await Blog.countDocuments(filter);
 
+  // console.log(result);
     return {
       meta: {
         page: Number(page),

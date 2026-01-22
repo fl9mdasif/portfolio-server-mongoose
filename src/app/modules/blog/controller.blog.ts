@@ -27,9 +27,8 @@ const getAllBlogs = catchAsync(async (req, res) => {
   response.getSendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    meta: result.meta,  
     message: 'Blogs retrieved successfully',
-    data: result.data,  
+    data: result,  
   });
 });
 

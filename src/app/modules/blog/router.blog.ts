@@ -32,7 +32,7 @@ router.delete(
   blogControllers.deleteBlogs,
 );
 
-router.put(
+router.patch(
   '/:blogId',
   // auth(USER_ROLE.seller, USER_ROLE.superAdmin),
   // validateRequest(ShoesValidation.UpdateShoesValidationSchema),
