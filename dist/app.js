@@ -20,13 +20,28 @@ const globalErrorHandler_1 = __importDefault(require("./app/middlewares/globalEr
 const notFound_1 = __importDefault(require("./app/middlewares/notFound"));
 const routes_1 = __importDefault(require("./app/routes"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+// import { ImageUploads } from './app/modules/upload/route.upload';
 const app = (0, express_1.default)();
 // parser middleware
 app.use(express_1.default.json());
-// app.use(cors());
-// origin: 'http://localhost:5173', // Update with the actual origin of your frontend
+app.use(express_1.default.urlencoded({ extended: true }));
+const allowedOrigins = [
+    'https://dev-mdasif-portolio.vercel.app',
+    'https://master.d1nc0rwrl0o6av.amplifyapp.com', // Your Amplify frontend
+    'http://localhost:3000'
+];
 app.use((0, cors_1.default)({
-    origin: 'http://localhost:3000', // Update with the actual origin of your frontend
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps, Postman)
+        if (!origin)
+            return callback(null, true);
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        }
+        else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
 }));

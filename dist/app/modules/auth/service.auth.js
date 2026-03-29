@@ -27,7 +27,7 @@ const registerUser = (payload) => __awaiter(void 0, void 0, void 0, function* ()
 });
 const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     //
-    // console.log(payload)
+    // console.log('payload',payload)
     // 1. checking if the user is exist
     const user = yield mode_auth_1.User.isUserExists(payload.email);
     // console.log(user);
@@ -48,7 +48,7 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // create token
     const accessToken = (0, utils_auth_1.createToken)(jwtPayload, config_1.default.jwt_access_secret, config_1.default.jwt_access_expires_in);
     // refresh token
-    const refreshToken = (0, utils_auth_1.createToken)(jwtPayload, config_1.default.jwt_access_secret, config_1.default.jwt_access_expires_in);
+    const refreshToken = (0, utils_auth_1.createToken)(jwtPayload, config_1.default.jwt_refresh_secret, config_1.default.jwt_refresh_expires_in);
     return {
         data: { jwtPayload },
         accessToken,
@@ -100,7 +100,9 @@ const refreshToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
         throw new AppErrors_1.default(http_status_1.default.UNAUTHORIZED, 'You are not authorized !');
     }
     const jwtPayload = {
+        _id: user._id,
         username: user.username,
+        email: user.email,
         role: user.role,
     };
     const accessToken = (0, utils_auth_1.createToken)(jwtPayload, config_1.default.jwt_access_secret, config_1.default.jwt_access_expires_in);

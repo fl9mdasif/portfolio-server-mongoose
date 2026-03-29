@@ -1,17 +1,14 @@
 # 1. Base Image
-FROM node:18-alpine
-
+FROM node:20
 # 2. Set working directory inside the container
 WORKDIR /app
-
 # 3. Copy package files and install dependencies
 # This caches your node_modules layer
 COPY package*.json ./
-RUN npm install
+RUN npm install 
 
 # 4. Copy the rest of your app's code
 COPY . .
-
 # 5. Build your TypeScript code into JavaScript
 RUN npm run build
 
@@ -19,4 +16,4 @@ RUN npm run build
 EXPOSE 5000
 
 # 7. Command to run the *production* server
-CMD [ "npm", "start" ]
+CMD [ "npm", "run" , "dev"]

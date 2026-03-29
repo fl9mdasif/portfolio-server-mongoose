@@ -27,9 +27,10 @@ const getAllProjects = catchAsync(async (req, res) => {
   response.getSendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    
+
     message: 'Projects retrieved successfully',
-    data: result,
+    meta: result.meta,
+    data: result.data,
   });
 });
 

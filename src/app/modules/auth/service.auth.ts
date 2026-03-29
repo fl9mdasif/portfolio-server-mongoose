@@ -16,7 +16,8 @@ const registerUser = async (payload: TUser) => {
 
 const loginUser = async (payload: TLoginUser) => {
   //
-  // console.log(payload)
+  // console.log('payload',payload)
+
   // 1. checking if the user is exist
   const user = await User.isUserExists(payload.email);
   // console.log(user);
@@ -51,8 +52,8 @@ const loginUser = async (payload: TLoginUser) => {
   // refresh token
   const refreshToken = createToken(
     jwtPayload,
-    config.jwt_access_secret as string,
-    config.jwt_access_expires_in as string,
+    config.jwt_refresh_secret as string,
+    config.jwt_refresh_expires_in as string,
   );
 
   return {
@@ -141,7 +142,9 @@ const refreshToken = async (token: string) => {
   }
 
   const jwtPayload: any = {
+    _id: user._id as string,
     username: user.username,
+    email: user.email,
     role: user.role,
   };
 

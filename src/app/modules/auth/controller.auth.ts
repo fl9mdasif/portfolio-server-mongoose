@@ -2,9 +2,10 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import { response } from '../../utils/sendResponse';
 import { authServices } from './service.auth';
+import AppError from '../../errors/AppErrors';
 
 const registerUser = catchAsync(async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
 
   const result = await authServices.registerUser(req.body);
 
@@ -18,6 +19,8 @@ const registerUser = catchAsync(async (req, res) => {
 
 
 const loginUser = catchAsync(async (req, res) => {
+
+  
   const result = await authServices.loginUser(req.body);
 
   const { data, accessToken } = result;
@@ -56,17 +59,18 @@ const refreshToken = catchAsync(async (req, res) => {
 
   // const refreshToken = localStorage.getItem('refreshToken') as string | null;
 
-  if (refreshToken) {
-    // console.log('r', refreshToken);
-    const result = await authServices.refreshToken(refreshToken);
-
-    response.createSendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'Refresh token is retrieved successfully!',
-      data: result,
-    });
+  if (!refreshToken) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Refresh token not found!');
   }
+
+  const result = await authServices.refreshToken(refreshToken);
+
+  response.createSendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Refresh token is retrieved successfully!',
+    data: result,
+  });
 });
 
 export const authControllers = {

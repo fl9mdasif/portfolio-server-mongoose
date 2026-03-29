@@ -28,7 +28,8 @@ const getAllBlogs = catchAsync(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Blogs retrieved successfully',
-    data: result,  
+    meta: result.meta,
+    data: result.data,
   });
 });
 
