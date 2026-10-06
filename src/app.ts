@@ -15,6 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const allowedOrigins = [
+  'https://asifalazad.com',
   'https://www.asifalazad.com',
   'https://dev-mdasif-portfolio.vercel.app',
   'https://master.d1nc0rwrl0o6av.amplifyapp.com', // Your Amplify frontend
