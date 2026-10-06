@@ -36,7 +36,8 @@ const getAllBlogs = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, vo
         statusCode: http_status_1.default.OK,
         success: true,
         message: 'Blogs retrieved successfully',
-        data: result,
+        meta: result.meta,
+        data: result.data,
     });
 }));
 // delete blogs
