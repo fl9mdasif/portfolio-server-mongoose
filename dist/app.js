@@ -29,8 +29,7 @@ const allowedOrigins = [
     'https://asifalazad.com',
     'https://www.asifalazad.com',
     'https://my-fullstack-portfolio-ten.vercel.app',
-    'https://dev-mdasif-portfolio.vercel.app',
-    'https://master.d1nc0rwrl0o6av.amplifyapp.com', // Your Amplify frontend
+    'https://master.d1nc0rwrl0o6av.amplifyapp.com', // Amplify dashboard URL
     'http://localhost:3000'
 ];
 app.use((0, cors_1.default)({

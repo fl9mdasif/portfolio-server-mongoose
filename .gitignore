@@ -3,4 +3,10 @@ node_modules
 .env.local
 
 .vercel
-dist
+
+# NOTE: dist/ is intentionally committed. vercel.json uses the legacy
+# `builds` config pointing directly at dist/server.js -- Vercel does not
+# run a build step for it, so the compiled output must already be in
+# git. Previously having "dist" here silently hid whole new modules
+# (skills, reviews) from git, causing "Cannot find module" crashes in
+# production. Always run `npm run build` and commit dist/ before pushing.
