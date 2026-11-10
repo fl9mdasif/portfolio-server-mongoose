@@ -16,4 +16,4 @@ RUN npm run build
 EXPOSE 5000
 
 # 7. Command to run the *production* server
-CMD [ "npm", "run" , "dev"]
+CMD [ "npm", "run" , "start"]

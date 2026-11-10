@@ -18,7 +18,7 @@ const http_status_1 = __importDefault(require("http-status"));
 const mode_auth_1 = require("./mode.auth");
 const AppErrors_1 = __importDefault(require("../../errors/AppErrors"));
 const config_1 = __importDefault(require("../../config"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const utils_auth_1 = require("./utils.auth");
 const registerUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // create
@@ -72,7 +72,7 @@ const changePassword = (userData, payload) => __awaiter(void 0, void 0, void 0, 
         return null;
     }
     // 04 hash new password
-    const newHashedPassword = yield bcrypt_1.default.hash(payload.newPassword, Number(config_1.default.bcrypt_salt_round));
+    const newHashedPassword = yield bcryptjs_1.default.hash(payload.newPassword, Number(config_1.default.bcrypt_salt_round));
     // update password
     yield mode_auth_1.User.findOneAndUpdate({
         username: userData.username,

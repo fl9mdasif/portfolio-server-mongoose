@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const mongoose_1 = require("mongoose");
-const bcrypt_1 = __importDefault(require("bcrypt"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const config_1 = __importDefault(require("../../config"));
 const userSchema = new mongoose_1.Schema({
     username: {
@@ -48,14 +48,14 @@ userSchema.pre('save', function (next) {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const user = this;
         // Store hash in your password DB.
-        user.password = yield bcrypt_1.default.hash(user.password, Number(config_1.default.bcrypt_salt_round));
+        user.password = yield bcryptjs_1.default.hash(user.password, Number(config_1.default.bcrypt_salt_round));
         next();
     });
 });
 // compare bcrypt password for auth
 userSchema.statics.isPasswordMatched = function (plainTextPassword, hashedPassword) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield bcrypt_1.default.compare(plainTextPassword, hashedPassword);
+        return yield bcryptjs_1.default.compare(plainTextPassword, hashedPassword);
     });
 };
 // find user exists

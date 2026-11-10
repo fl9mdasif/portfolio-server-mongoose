@@ -26,6 +26,9 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 const allowedOrigins = [
+    'https://asifalazad.com',
+    'https://www.asifalazad.com',
+    'https://my-fullstack-portfolio-ten.vercel.app',
     'https://dev-mdasif-portfolio.vercel.app',
     'https://master.d1nc0rwrl0o6av.amplifyapp.com', // Your Amplify frontend
     'http://localhost:3000'

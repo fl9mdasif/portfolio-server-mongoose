@@ -4,7 +4,7 @@ import { User } from './mode.auth';
 import { TLoginUser, TUser } from './interface.auth';
 import AppError from '../../errors/AppErrors';
 import config from '../../config';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { createToken, verifyToken } from './utils.auth';
 import { JwtPayload } from 'jsonwebtoken';
 
